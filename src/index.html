@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajuro Stock</title>
+
+    <meta name="csrf-token" content="@GetAntiXsrfRequestToken()" />
+    <meta name="theme-color" content="#343a40">
+    <meta name="user-id" content="@User.GetUserId()">
+    <meta name="user-name" content="@userRepo.GetById(User.GetUserId())?.UserName">
+    <meta name="user-hash" content="@intercomService.CreateUserToken(User.GetUserId().ToString())">
+    <meta name="intercom-app-id" content="@intercomService.GetIntercomAppId()">
+
+    <link rel="shortcut icon" href="./images/favicon.png" asp-append-version="true" />
+    <link rel="stylesheet" href="./lib/intro.js/introjs.css" asp-append-version="true" />
+    <link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="./css/site.css" />
+    <link rel="stylesheet" href="./css/table.css" />
+    <link rel="stylesheet" href="./css/modal.css" />
+    <link rel="stylesheet" href="./css/calendar.css" />
+    <link rel="stylesheet" href="./css/chart.css" />
+    <link rel="stylesheet" href="./css/news.css" />
+    
+
+</head>
+<body class="d-flex flex-column">
+
+
+    <div class="wrapper">
+
+            <div id="progressApp">
+                <progress-bar ref="progress-bar" inline-template>
+                    <div v-cloak>
+                        <transition
+                            v-on:before-enter="beforeEnter"
+                            v-on:enter="enter"
+                            v-on:after-enter="afterEnter"
+                            v-bind:css="false">
+                            <div class="top-progress" :style="barStyle">
+                                <div class="peg" :style="pegStyle">
+                                </div>
+                            </div>
+                        </transition>
+                        <div v-for="process in processes"> Loading... </div>
+                    </div>
+                </progress-bar>
+            </div>
+
+                <main role="main" class="container-fluid body-content flex-grow">
+   
+                </main>
+                <div class="modal-backdrop-admin"></div>
+        </div>
+
+    </div>
+
+    <script src="./lib/jquery/jquery.js" asp-append-version="true"></script>
+    <script src="./lib/popper/popper.js" asp-append-version="true"></script>
+    <script src="./lib/bootstrap/js/bootstrap.js" asp-append-version="true"></script>
+    <script src="./lib/vue/vue.js" asp-append-version="true"></script>
+    <script src="./lib/moment/moment.min.js" asp-append-version="true"></script>
+    <script src="./lib/vue-select-master/vue-select.umd.js" asp-append-version="true"></script>  
+    <script src="./js/site.js" asp-append-version="true"></script>
+    <script src="./js/progress.js"></script>
+</body>
+</html>
+
+<div class="row" id="ajuroApp">
+    <datalist id="symbolsLookup">
+        <option v-for="item in this.lookupSymbols" v-bind:value="item.id" >{{ item.code }} {{ item.name }} {{ item.market }}</option>
+    </datalist>
+    <div style="display:none"  class="col-lg-2 col-md-12" v-if="showMenu">
+        <div class="list-group" id="list-tab" role="tablist">
+            <a id="page-thumbnails-link" v-on:click="setPage" data-page="page-thumbnails" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-thumbnails' }" href="#"> Thumbnails</a>
+            <a id="page-graphs-link" v-on:click="setPage" data-page="page-graphs" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-graphs' }" href="#"> Graphs</a>
+            <a id="page-symbols-link" v-on:click="setPage" data-page="page-symbols" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-symbols' }" href="#"> Symbols</a>
+            <a id="page-last-news-link" v-on:click="setPage" data-page="page-last-news" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-last-news' }" href="#"> Last News</a>
+            <a id="page-alerts-link" v-on:click="setPage" data-page="page-alerts" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-alerts' }" href="#"> Alerts</a>
+            <a id="page-currencies-link" v-on:click="setPage" data-page="page-currencies" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-currencies' }" href="#"> Currencies</a>
+            <a id="page-countries-link" v-on:click="setPage" data-page="page-countries" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-countries' }" href="#"> Countries</a>
+            <a id="page-requests-link" v-on:click="setPage" data-page="page-requests" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-requests' }" href="#"> Requests</a>
+            <a id="page-news-link" v-on:click="setPage" data-page="page-news" class="list-group-item list-group-item-action" v-bind:class="{ active: currentPage == 'page-news' }" href="#"> News</a>
+        </div>
+
+    </div>
+    <div class="col-lg-10 col-md-12" v-cloak>
+
+<img class="loader glyphicon" 
+    id='app-waiting' 
+    style='position: fixed;top: 50%; left: 50%; height:200px;margin-top: -100px;margin-left: -100px;' 
+    src="./js/otb/img/loading-red.svg" 
+    alt="loading"/>
+
+
+<span  style="display:none" id='app-content' v-cloak>
+<span id="pageGraphs" v-if="currentPage == 'page-graphs'" v-bind:is-mobile="isMobile" >Graphs | 
+    <span v-if="meta && meta.actions">
+        <span v-for="(action, actionIndex) in meta.actions" :key="actionIndex">
+			<span v-if="action.isPopover1">
+				<v-popover>
+					<a 
+						:title="action.name" 
+						v-bind:class="action" 
+						:class="action.linkClass"
+					><i :class="action.class"></i> {{ action.name }}</a>
+					<template slot="popover">
+						<table style='font-size: 12px'>
+							<otb-expert-table
+								ref="otbExpertTable"
+								type="symbol"
+								:meta=metaSymbol
+							>
+							</otb-expert-table>
+						</table>
+						<a v-close-popover>Close</a>
+					</template>
+				</v-popover>
+			</span>
+            <a v-else
+                :title="action.name" 
+                v-bind:class="action" 
+                :href="action.link ? action.link : '#'" 
+                v-on:click="action.action ? execute(null, action.action) : $parent.setPage"
+                ><i :class="action.class"></i></a>
+        </span>
+    </span> 
+    <page-graphs></page-graphs>
+</span>
+<div id="pageAlerts" v-if="currentPage == 'page-alerts'">
+    Alerts
+    <page-alerts></page-alerts>
+</div>
+<div id="pageSymbols" v-if="currentPage == 'page-symbols'" v-bind:is-mobile="isMobile" >
+	Symbols
+	<page-symbols></page-symbols>
+</div>
+<div id="pageThumbnails" v-if="currentPage == 'page-thumbnails'">
+	Thumbnails
+	<page-thumbnails></page-thumbnails>
+</div>
+<div id="pageLastNews" v-if="currentPage == 'page-last-news'">
+	Last News
+	<page-last-news></page-last-news>
+</div>
+<div id="pageReports" v-if="currentPage == 'page-reports'">
+	Reports
+	<page-reports></page-reports>
+</div>
+<div id="pageCurrencies" v-if="currentPage == 'page-currencies'">
+	Currencies
+	<page-currencies></page-currencies>
+</div>
+<div id="pageCountries" v-if="currentPage == 'page-countries'">
+	Countries
+	<page-countries></page-countries>
+</div>
+<div id="pageCountries" v-if="currentPage == 'page-ticks'">
+	Ticks
+	<page-ticks :base-object='baseObject' :base-id="baseId"></page-ticks>
+</div>
+<div id="pageRequests" v-if="currentPage == 'page-requests'">
+	Requests
+	<page-requests></page-requests>
+</div>
+<div id="pageNews" v-if="currentPage == 'page-news'">
+	News
+	<page-news></page-news>
+</div>
+</span>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="./lib/vue2-autocomplete/dist/style/vue2-autocomplete.css" />
+<link rel="stylesheet" href="./lib/vue-vanilla-datetime-picker/DateTimePicker.css" />
+<link rel="stylesheet" href="./lib/vue-select-master/vue-select.css" />
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">  
+<script type="module" src="./js/admin.js"></script>
+
+    

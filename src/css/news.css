@@ -1,0 +1,63 @@
+.hscroll {
+    display: grid;
+    grid-gap: 10px;
+    grid-auto-rows: 100%;
+    grid-template-columns: repeat(6, calc(90% - 0px));
+    grid-template-rows: minmax(150px, 1fr);
+    height: 80px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+.hscroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .inline-news {
+      color: gray;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow:ellipsis;
+  }
+  .news-read{
+    color: blue;
+  }
+  .news-preview{
+    border: 1px solid #AAAAFF;
+  }
+  
+  /* Hide scrollbar for IE and Edge */
+  .hscroll {
+    -ms-overflow-style: none;
+  }
+  .news-td{
+    vertical-align: top;
+    border-top: 1px solid gray;
+    padding-top: 5px;
+  }
+  .news-link{
+    color: slateblue;
+  }
+  .news-text{
+    text-align: left !important;
+    display: block;
+    max-height: 120px;
+    overflow: auto;
+  }
+  .horizontal-news-text{
+    text-align: left !important;
+    display: block;
+    max-height: 70px;
+    overflow: auto;
+  }
+  .news-img{
+    width: 70px;
+    margin-right: 5px;
+    height: 70px;
+    border: 2px solid #555;
+  }
+  .horizontal-news-img{
+    margin-right: 5px;
+    height: 70px;
+    border: 2px solid #555;
+  }

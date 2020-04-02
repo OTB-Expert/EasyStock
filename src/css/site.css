@@ -1,0 +1,91 @@
+﻿#ajuroApp.row{
+  width: 100%;
+  padding: 5px;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.action {
+  padding-right: 5px;
+}
+.action-box {
+  color: black;
+  border: 1px solid orange;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 0px 5px 0px 5px;
+}
+
+.red{
+  color: red;
+}
+.red:hover{
+  color: red;
+}
+.green{
+  color: green;
+}
+.green:hover{
+  color: green;
+}
+.orange{
+  color: orange;
+}
+.orange:hover{
+  color: orange;
+}
+.blue{
+  color: blue;
+}
+.blue:hover{
+  color: blue;
+}
+.magenta{
+  color: magenta;
+}
+.magenta:hover{
+  color: magenta;
+}
+.gray{
+  color: gray;
+}
+.gray:hover{
+  color: gray;
+}
+
+.right-10{
+  margin-right: 10px;
+}
+
+/* glyphicon */
+
+/* enable absolute positioning */
+.inner-addon { 
+    position: relative; 
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 4px 10px 4px 10px;
+  color: #666;
+  height: 20px;
+  width: 20px;
+  pointer-events: none;
+}
+
+.inner-addon .loader{
+    height: 30px;
+    width: 30px;
+    padding: 2px 0px 10px 0px;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input {
+     // padding-right: 30px; 
+}

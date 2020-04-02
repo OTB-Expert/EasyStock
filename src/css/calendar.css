@@ -1,0 +1,141 @@
+.calendar ul {list-style-type: none;}
+.calendar body {font-family: Verdana, sans-serif;}
+
+.pill.success{
+  color: #0000BB;
+  background-color: #BBFFBB;
+}
+.pill.up{
+  color: rgb(0, 0, 0);
+  border: 1px solid green;
+  padding: 0px 5px 0px 5px;
+  border-radius: 5px;
+  background-color: rgb(200, 255, 200);
+}
+.pill.down{
+  color: rgb(0, 0, 0);
+  border: 1px solid red;
+  padding: 0px 5px 0px 5px;
+  border-radius: 5px;
+  background-color: rgb(255, 200, 200);
+}
+
+/* Month header */
+.calendar .month {
+  padding: 70px 25px;
+  width: 100%;
+  background: #1abc9c;
+  text-align: center;
+}
+
+/* Month list */
+.calendar .month ul {
+  margin: 0;
+  padding: 0;
+}
+
+.calendar .month ul li {
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* Previous button inside month header */
+.calendar .month .prev {
+  float: left;
+  padding-top: 10px;
+}
+
+/* Next button */
+.calendar .month .next {
+  float: right;
+  padding-top: 10px;
+}
+
+/* Weekdays (Mon-Sun) */
+.calendar .weekdays {
+  margin: 0;
+  padding: 10px 0;
+  background-color:#ddd;
+}
+
+.thumbnails .weekdays li {
+  display: inline-block;
+  width: 13.6%;
+  color: #666;
+  text-align: center;
+}
+
+.calendar .weekdays li {
+  display: inline-block;
+  width: 13.6%;
+  color: #666;
+  text-align: center;
+}
+
+/* Days (1-31) */
+.calendar .days {
+  padding: 10px 0;
+  background: #eee;
+  margin: 0;
+}
+.thumbnails .days {
+  padding: 10px 0;
+  margin: 0;
+}
+
+.calendar .days li span .pill{
+    color: black;
+    border: 1px solid gray;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 0px 5px 0px 5px;
+}
+
+.calendar .days li span .action{
+    color: black;
+    border: 1px solid orange;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 0px 5px 0px 5px;
+}
+
+.calendar .days .title {
+  max-height: 40px;
+  min-height: 40px;
+  overflow: hidden;
+}
+
+.calendar .days li {
+  margin-top: 20px;
+  list-style-type: none;
+  display: inline-block;
+  vertical-align: top;
+  width: 15%;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size:12px;
+  color: #777;
+}
+
+.thumbnails .days li {
+  margin-right: 10px;
+  border: 1px solid #d0e;
+  margin-top: 20px;
+  list-style-type: none;
+  display: inline-block;
+  vertical-align: top;
+  width: 30%;
+  text-align: center;
+  margin-bottom: 5px;
+  font-size:12px;
+  color: #777;
+}
+
+/* Highlight the "current" day */
+.calendar .days li .active {
+  padding: 5px;
+  background: #1abc9c;
+  color: white !important
+}

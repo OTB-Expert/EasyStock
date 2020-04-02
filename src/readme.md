@@ -1,0 +1,5 @@
+Simplified stock app
+
+
+
+

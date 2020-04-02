@@ -1,0 +1,18 @@
+{
+  "compileOnSave": false,
+  "allowJS": true,
+  "include": [
+    "src/**/*.ts",
+    "../lib/**/*"
+  ],
+  "compilerOptions": {
+    "plugins": [ { "name": "typescript-tslint-plugin" } ],
+    // this aligns with Vue's browser support
+    "target": "es6",
+    // this enables stricter inference for data properties on `this`
+    "strict": true,
+    // if using webpack 2+ or rollup, to leverage tree shaking:
+    "module": "es2015",
+    "moduleResolution": "node"
+  }
+}

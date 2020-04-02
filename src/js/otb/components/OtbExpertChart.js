@@ -499,7 +499,8 @@ const OtbTable = Vue.component("otb-expert-chart", {
       };
 	  		var ids = this.getIds();
 			services.api.get(this, 
-			(this.meta.endpoints.reload.endpoint ? this.meta.endpoints.reload.endpoint + date + (false && ids.length > 0 ? ('/' + ids) : '') : (this.type + "/list")), meta).then(r => {
+			(this.meta.endpoints.reload.endpoint ? this.meta.endpoints.reload.endpoint + date + (false && ids.length > 0 ? ('/' + ids) : '') : (this.type + "/list")), meta)
+			.then(r => {
 				r.data.forEach(p=>{
 					if(this.meta && this.meta.mapping){
 						this.meta.mapping.forEach(m=>{

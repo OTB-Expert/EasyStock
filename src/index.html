@@ -30,21 +30,6 @@
     <div class="wrapper">
 
             <div id="progressApp">
-                <progress-bar ref="progress-bar" inline-template>
-                    <div v-cloak>
-                        <transition
-                            v-on:before-enter="beforeEnter"
-                            v-on:enter="enter"
-                            v-on:after-enter="afterEnter"
-                            v-bind:css="false">
-                            <div class="top-progress" :style="barStyle">
-                                <div class="peg" :style="pegStyle">
-                                </div>
-                            </div>
-                        </transition>
-                        <div v-for="process in processes"> Loading... </div>
-                    </div>
-                </progress-bar>
             </div>
 
                 <main role="main" class="container-fluid body-content flex-grow">

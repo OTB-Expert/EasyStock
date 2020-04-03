@@ -40,7 +40,7 @@ var GraphsPage = Vue.component("page-graphs", {
 				endpoints: {
 					reload: {
 						action: "GET",
-						endpoint: "stock/charts/"
+						endpoint: "demo/day/date/"
 					},
 					collect: {
 						action: "GET",

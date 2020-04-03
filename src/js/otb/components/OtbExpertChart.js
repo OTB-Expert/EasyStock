@@ -27,9 +27,9 @@ const OtbTable = Vue.component("otb-expert-chart", {
 	</span>
 
     <table class="mobile-table">
-            <tr v-for="(symbol, index) in filteredSymbols" v-bind:key="symbol.SymbolId">
+            <tr v-for="(symbol, index) in filteredSymbols" v-bind:key="symbol.symbolId">
             <td v-if="!isMobile" height="100">
-			  <h5> {{ symbol.SymbolName }} <span v-if="!isMobile"> ({{ symbol.SymbolId }}) {{ lastRequest }} </span> </h5>
+			  <h5> {{ symbol.symbolName }} <span v-if="!isMobile"> ({{ symbol.symbolId }}) {{ lastRequest }} </span> </h5>
 			  
 				<span v-if="meta && meta.actions">
 					<span v-for="(action, actionIndex) in meta.actions" :key="actionIndex">
@@ -45,37 +45,37 @@ const OtbTable = Vue.component("otb-expert-chart", {
 					</span>
 				</span>
 
-              <div :id="'graph_03_' + symbol.SymbolId" 
+              <div :id="'graph_03_' + symbol.symbolId" 
               v-show="true && show(3, index)"
               class="graphGridItem_03"
               ></div>
-              <div class="graphGridItem_03 missing" v-if="false && (!filteredItems_03[index] || !filteredItems_03[index].Intraday || !filteredItems_03[index].Intraday.length)"> 
+              <div class="graphGridItem_03 missing" v-if="false && (!filteredItems_03[index] || !filteredItems_03[index].intraday || !filteredItems_03[index].intraday.length)"> 
                 <span v-if="symbol.loading" class="action success">
                   <img class="loader glyphicon" v-if="symbol.loading" src="./js/otb/img/loading-red.svg" alt="loading"/>
                 </span>					
-                <i v-if="(!filteredItems_03[index] || !filteredItems_03[index].Intraday.length) && !symbol.loading" v-on:click="api_collect(filteredItems_03[index])" class="glyphicon glyphicon-refresh"> Reload for {{ date_03 }}</i>
+                <i v-if="(!filteredItems_03[index] || !filteredItems_03[index].intraday.length) && !symbol.loading" v-on:click="api_collect(filteredItems_03[index])" class="glyphicon glyphicon-refresh"> Reload for {{ date_03 }}</i>
               </div>
             </td>
             <td v-if="!isMobile" height="100">
-			  <h5> {{ symbol.SymbolName }} ({{ symbol.SymbolId }})  
-				<span v-if="filteredItems_02[index] && filteredItems_02[index].Intraday">{{filteredItems_02[index].Intraday.length}}</span>
+			  <h5> {{ symbol.symbolName }} ({{ symbol.symbolId }})  
+				<span v-if="filteredItems_02[index] && filteredItems_02[index].intraday">{{filteredItems_02[index].intraday.length}}</span>
 				</h5>
-              <div :id="'graph_02_' + symbol.SymbolId"  
+              <div :id="'graph_02_' + symbol.symbolId"  
               v-show="true && show(2, index)"
               class="graphGridItem_02"
               ></div>
-              <div class="graphGridItem_02 missing" v-if="false && (!filteredItems_02 || !filteredItems_02[index] || !filteredItems_02[index].Intraday || !filteredItems_02[index].Intraday.length)"> 
+              <div class="graphGridItem_02 missing" v-if="false && (!filteredItems_02 || !filteredItems_02[index] || !filteredItems_02[index].intraday || !filteredItems_02[index].intraday.length)"> 
                 <span v-if="symbol.loading" class="action success">
                   <img class="loader glyphicon" v-if="symbol.loading" src="./js/otb/img/loading-red.svg" alt="loading"/>
                 </span>					
-                <i v-if="(!filteredItems_02[index] || !filteredItems_02[index].Intraday.length) && !symbol.loading" v-on:click="reload(filteredItems_02[index])" class="glyphicon glyphicon-refresh"> Reload for {{ date_02 }}</i>
+                <i v-if="(!filteredItems_02[index] || !filteredItems_02[index].intraday.length) && !symbol.loading" v-on:click="reload(filteredItems_02[index])" class="glyphicon glyphicon-refresh"> Reload for {{ date_02 }}</i>
               </div>
             </td>
             <td height="100">
-				<h5> {{ symbol.SymbolName }}
+				<h5> {{ symbol.symbolName }}
 					<span v-if="!isMobile">
-						({{ symbol.SymbolId }}) 		  
-						<span v-if="filteredItems_01[index] && filteredItems_01[index].Intraday">{{filteredItems_01[index].Intraday.length}}</span>
+						({{ symbol.symbolId }}) 		  
+						<span v-if="filteredItems_01[index] && filteredItems_01[index].intraday">{{filteredItems_01[index].intraday.length}}</span>
 					</span>	
 					
 			  
@@ -98,7 +98,7 @@ const OtbTable = Vue.component("otb-expert-chart", {
 				<span v-show="isGraph">
 				
 			  <div 
-				:id="'graph_01_' + symbol.SymbolId"  
+				:id="'graph_01_' + symbol.symbolId"  
 				v-show="true && show(1, index)"
 				:class="isMobile ? 'graphGridItem_mobile' : 'graphGridItem_01'"
 			  ></div>
@@ -107,12 +107,12 @@ const OtbTable = Vue.component("otb-expert-chart", {
 			  <div 
 				:class="isMobile ? 'graphGridItem_mobile' : 'graphGridItem_01'"
 				class="missing"
-				v-if="false && (!filteredItems_01 || !filteredItems_01[index] || !filteredItems_01[index].Intraday || !filteredItems_01[index].Intraday.length)"
+				v-if="false && (!filteredItems_01 || !filteredItems_01[index] || !filteredItems_01[index].intraday || !filteredItems_01[index].intraday.length)"
 			  > 
                 <span v-if="symbol.loading" class="action success">
                   <img class="loader glyphicon" v-if="symbol.loading" src="./js/otb/img/loading-red.svg" alt="loading"/>
                 </span>					
-                <i v-if="(!filteredItems_01[index] || !filteredItems_01[index].Intraday.length) && !symbol.loading" v-on:click="reload(filteredItems_01[index])" class="glyphicon glyphicon-refresh"> Reload for {{ date_01 }}</i>
+                <i v-if="(!filteredItems_01[index] || !filteredItems_01[index].intraday.length) && !symbol.loading" v-on:click="reload(filteredItems_01[index])" class="glyphicon glyphicon-refresh"> Reload for {{ date_01 }}</i>
 			 
 				
 				</div>
@@ -248,7 +248,7 @@ const OtbTable = Vue.component("otb-expert-chart", {
 		},
     graphsData(){                         
       this.data.forEach( function(item, index){
-          // that.updateCharts(item.SymbolName, item.Intraday)
+          // that.updateCharts(item.symbolName, item.intraday)
       })
     },
     show(){
@@ -257,13 +257,13 @@ const OtbTable = Vue.component("otb-expert-chart", {
         switch(collectionIndex)
         {
           case 1:
-            return this.items_01[index] && this.items_01[index].Intraday && this.items_01[index].Intraday.length
+            return this.items_01[index] && this.items_01[index].intraday && this.items_01[index].intraday.length
             break;
           case 2:
-            return this.items_02[index] && this.items_02[index].Intraday && this.items_02[index].Intraday.length
+            return this.items_02[index] && this.items_02[index].intraday && this.items_02[index].intraday.length
             break;
           case 3:
-            return this.items_03[index] && this.items_03[index].Intraday && this.items_03[index].Intraday.length
+            return this.items_03[index] && this.items_03[index].intraday && this.items_03[index].intraday.length
             break;
         }
       }
@@ -356,11 +356,11 @@ const OtbTable = Vue.component("otb-expert-chart", {
 	},
 	methods: {
     	updateCharts(collectionIndex, symbol, data, index){
-      if(!symbol.Intraday || symbol.Intraday.length === 0)
+      if(!symbol.intraday || symbol.intraday.length === 0)
       {
         return;
 	  }
-	  var element = document.getElementById("graph_0" + collectionIndex + "_" + symbol.SymbolId);
+	  var element = document.getElementById("graph_0" + collectionIndex + "_" + symbol.symbolId);
 	  if(!element || window.getComputedStyle(element).display !== 'block')
 	  {
         return;
@@ -368,15 +368,15 @@ const OtbTable = Vue.component("otb-expert-chart", {
       if(collectionIndex == 1){	
 		  var gIndex = index;	 
 			if(this.series_01[gIndex]) {
-				if(this.items_01[gIndex].Intraday.length < data.length)
+				if(this.items_01[gIndex].intraday.length < data.length)
 				{
-					for(var i = this.items_01[gIndex].Intraday.length; i < data.length; i++)
+					for(var i = this.items_01[gIndex].intraday.length; i < data.length; i++)
 					{
 						if(this.isGraph){
 							this.series_01[gIndex].update(data[i]);
 						}
 						this.last_01[index] = data[data.length - 1].value;
-						this.items_01[gIndex].Intraday.push(data[i]);
+						this.items_01[gIndex].intraday.push(data[i]);
 						this.charts_01[index].timeScale().fitContent();
 					}
 				}
@@ -384,12 +384,12 @@ const OtbTable = Vue.component("otb-expert-chart", {
 		  	else{
 				this.init_01.push(data[0].value);
 				this.last_01.push(data[0].value);
-				this.items_01[index].Intraday = data;
+				this.items_01[index].intraday = data;
 			  if(!this.isGraph)
 			  {
 				  // return;
 			  }
-				var chart_01 = createChart("graph_01_" + symbol.SymbolId, { height: 200, width: (this.isMobile ? window.innerWidth - 30 :400) });
+				var chart_01 = createChart("graph_01_" + symbol.symbolId, { height: 200, width: (this.isMobile ? window.innerWidth - 30 :400) });
 				const lineSeries_01 = chart_01.addLineSeries  ({          
 				price: 39.0,
 				color: 'red',
@@ -416,7 +416,7 @@ const OtbTable = Vue.component("otb-expert-chart", {
       }
       
       if(collectionIndex == 2){
-        const chart_02 = createChart("graph_02_" + symbol.SymbolId, { height: 200, width: 400 });
+        const chart_02 = createChart("graph_02_" + symbol.symbolId, { height: 200, width: 400 });
         const lineSeries_02 = chart_02.addLineSeries({          
           price: 39.0,
           color: 'blue',
@@ -427,7 +427,7 @@ const OtbTable = Vue.component("otb-expert-chart", {
       }
       
       if(collectionIndex ==3){
-        const chart_03 = createChart("graph_03_" + symbol.SymbolId, { height: 200, width: 600 });
+        const chart_03 = createChart("graph_03_" + symbol.symbolId, { height: 200, width: 600 });
         const lineSeries_03 = chart_03.addLineSeries({          
           price: 39.0,
           color: 'green',
@@ -441,10 +441,10 @@ const OtbTable = Vue.component("otb-expert-chart", {
       var collectionIndex = index;          
       var that = this;              
       items.forEach( function(item, index){
-        // that.alerts.push(item.SymbolName);
+        // that.alerts.push(item.symbolName);
         that.$forceUpdate();
 		var current_datetime = new Date();
-          item.Intraday = item.Intraday.map((val, index) => {
+          item.intraday = item.intraday.map((val, index) => {
             // var current_datetime = new Date(val[0] * 1000);
             current_datetime.setDate(current_datetime.getDate() + 1 );
             let formatted_date = current_datetime.getFullYear() + "-" + ((current_datetime.getMonth() + 1) < 10 ? '0': '') + (current_datetime.getMonth() + 1) +  (current_datetime.getDate() < 10 ? "-0" : '-') + current_datetime.getDate();// + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
@@ -454,7 +454,7 @@ const OtbTable = Vue.component("otb-expert-chart", {
               };
           }, this);
           that.$nextTick(() => {
-            that.updateCharts(collectionIndex, item, item.Intraday, index);
+            that.updateCharts(collectionIndex, item, item.intraday, index);
           });
 	  });
 	},
@@ -466,8 +466,8 @@ const OtbTable = Vue.component("otb-expert-chart", {
 		this.randomSeed += 1;
 		var item = this.items_01[0];
 		
-		item.Intraday.push({"time":{"day": this.randomSeed,"month":4,"year":2020},"value": 10*this.randomSeed});
-		this.updateCharts(1, item, item.Intraday, 1);
+		item.intraday.push({"time":{"day": this.randomSeed,"month":4,"year":2020},"value": 10*this.randomSeed});
+		this.updateCharts(1, item, item.intraday, 1);
 	},
 	fetchItems(collectionName, date, context = null) {
 			if(context && !this.isPolling && collectionName == '01')
@@ -499,9 +499,12 @@ const OtbTable = Vue.component("otb-expert-chart", {
       };
 	  		var ids = this.getIds();
 			services.api.get(this, 
-			(this.meta.endpoints.reload.endpoint ? this.meta.endpoints.reload.endpoint + date + (false && ids.length > 0 ? ('/' + ids) : '') : (this.type + "/list")), meta)
+			(this.meta.endpoints.reload.endpoint ? this.meta.endpoints.reload.endpoint 
+				+ date
+				+ "/skip/0/take/10"
+				+ (false && ids.length > 0 ? ('/' + ids) : '') : (this.type + "/list")), meta)
 			.then(r => {
-				r.data.forEach(p=>{
+				r.data.data.forEach(p=>{
 					if(this.meta && this.meta.mapping){
 						this.meta.mapping.forEach(m=>{
 							p[m[0]] = "" + p[m[1]];
@@ -514,42 +517,42 @@ const OtbTable = Vue.component("otb-expert-chart", {
 					}
 					p.selected = false;
         });
-		if(r.data)
+		if(r.data.data)
 		{
-			switch(r.data[0].Date.substring(0, 10)){
+			switch(r.data.data[0].date.substring(0, 10)){
 			case this.date_01:
 				if(this.debug)
 				{
-					r.data.forEach((item, index) => {
+					r.data.data.forEach((item, index) => {
 						if(!this.items_01[index])
 						{
 							this.items_01[index] = { 
-								id: item.SymbolId,
-								SymbolName: item.SymbolName,
-								Date: item.Date,
-								SymbolId: item.SymbolId,
-								Intraday: [ item.Intraday[0] ]
+								id: item.symbolId,
+								symbolName: item.symbolName,
+								date: item.date,
+								symbolId: item.symbolId,
+								intraday: [ item.intraday[0] ]
 							 };
 						}
 						var s = this.simulate ? 1 : 
-						this.items_01[index].Intraday.length > 1 ? 2 : 
-						item.Intraday.length > 3 ?
+						this.items_01[index].intraday.length > 1 ? 2 : 
+						item.intraday.length > 3 ?
 						3 : 4;
 
-						item.Intraday = this.simulate ? item.Intraday.splice(0, this.items_01[index].Intraday.length + 1) : 
-						this.items_01[index].Intraday.length > 1 ? item.Intraday.splice(0, this.items_01[index].Intraday.length + 1) : 
-						item.Intraday.length > 3 ?
-						item.Intraday.splice(0, item.Intraday.length - 3) : item.Intraday;
+						item.intraday = this.simulate ? item.intraday.splice(0, this.items_01[index].intraday.length + 1) : 
+						this.items_01[index].intraday.length > 1 ? item.intraday.splice(0, this.items_01[index].intraday.length + 1) : 
+						item.intraday.length > 3 ?
+						item.intraday.splice(0, item.intraday.length - 3) : item.intraday;
 					});
 				}
-				this.loadCompleted(1, r.data);
+				this.loadCompleted(1, r.data.data);
 				break;
 			case this.date_02:
-				this.items_02 = r.data;
+				this.items_02 = r.data.data;
 				this.loadCompleted(2, this.items_02);
 				break;
 			case this.date_03:
-				this.items_03 = r.data;
+				this.items_03 = r.data.data;
 				this.loadCompleted(3, this.items_03);
 				break;
 			}
@@ -585,7 +588,7 @@ const OtbTable = Vue.component("otb-expert-chart", {
 			alert.loading = true;
 			var meta = {};
 			var filter = {};
-			services.api.get(this, "symbol/" + alert.SymbolId + "/collect/" + moment(alert.Date).format('YYYY-MM-DD'),	meta, filter, true).then(r => {
+			services.api.get(this, "symbol/" + alert.symbolId + "/collect/" + moment(alert.date).format('YYYY-MM-DD'),	meta, filter, true).then(r => {
 				var date = this.virtualItems.find(p => r.data == p.date);
 				// date.loading = false;
 				// date.samples = r.data.samples;
@@ -634,15 +637,15 @@ const OtbTable = Vue.component("otb-expert-chart", {
 		},
 		remove: function(item){
 			var existentItem = null; 
-			existentItem = this.items_01.find(p=>p.SymbolId == item.symbol.symbolId);
+			existentItem = this.items_01.find(p=>p.symbolId == item.symbol.symbolId);
 			if(existentItem){
 				existentItem.deleted = true;
 			}
-			existentItem = this.items_02.find(p=>p.SymbolId == item.symbol.symbolId);
+			existentItem = this.items_02.find(p=>p.symbolId == item.symbol.symbolId);
 			{				
 				existentItem.deleted = true;
 			}
-			existentItem = this.items_03.find(p=>p.SymbolId == item.symbol.symbolId);
+			existentItem = this.items_03.find(p=>p.symbolId == item.symbol.symbolId);
 			{
 				existentItem.deleted = true;
 			}

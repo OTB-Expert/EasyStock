@@ -58,6 +58,14 @@ var GraphsPage = Vue.component("page-graphs", {
 				topActions:
 				[
 					{
+						name: "Thumbnails",
+						isMobile: true,
+						linkClass: "red",
+						boxClass: "action-box",
+						class: "glyphicon glyphicon-list-alt",
+						action: "execute goto thumbnails" // Execute = execute on parent; goto = function name; ticks = parameter
+					},
+					{
 						name: "Desktop",
 						class: "glyphicon glyphicon-phone",
 						// isMobile: true,

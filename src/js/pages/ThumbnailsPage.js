@@ -38,8 +38,8 @@ Vue.component("page-thumbnails", {
 				],
 				endpoints: {
 					reload: {
-						action: "POST",
-						endpoint: "stock/thumbnails/list"
+						action: "GET",
+						endpoint: "demo/day/date"
 					},
 					collect: {
 						action: "GET",
@@ -50,8 +50,8 @@ Vue.component("page-thumbnails", {
 						endpoint: "alert/{id}/suspend"
 					},
 					news: {
-						action: "POST",
-						endpoint: "news/last"
+						action: "GET",
+						endpoint: "demo/news"
 					},
 				},
 				topActions:

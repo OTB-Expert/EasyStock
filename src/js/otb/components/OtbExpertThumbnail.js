@@ -34,9 +34,9 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 	
 		<div :class="isMobile ? 'thumbnails': 'calendar'">
 			<ul class="days">
-				<li v-for="(symbol, index) in filteredItems"  v-bind:key="symbol.SymbolId">
+				<li v-for="(symbol, index) in filteredItems"  v-bind:key="symbol.symbolId">
 					<h5 class="title">
-				<span v-if="!isMobile && items[index] && items[index].Intraday">{{items[index].Intraday.length}}</span>
+				<span v-if="!isMobile && items[index] && items[index].intraday">{{items[index].intraday.length}}</span>
 						<span v-if="!symbol.news" class="pill waiting">-</span>
 						<span v-if="symbol.news && symbol.news.length > 0">						
 							<v-popover placement="left" style='width: 95%'>
@@ -54,9 +54,9 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 								</template>
 							</v-popover>
 						</span>
-						<span :title="symbol.SymbolName">{{ symbol.Code }} <span v-if="!isMobile">({{ symbol.SymbolId }})</span> </span>
+						<span :title="symbol.symbolName">{{ symbol.code }} <span v-if="!isMobile">({{ symbol.symbolId }})</span> </span>
 						<div>
-							<span v-if="!isMobile">{{items[index].Intraday[items[index].Intraday.length-1].value}}$ </span>
+							<span v-if="!isMobile">{{items[index].intraday[items[index].intraday.length-1].value}}$ </span>
 							<span class="pill" :class="getPercentage(index) < 0 ? 'down': 'up'"> {{ getPercentage(index) }}% </span>
 						</div>
 								
@@ -75,7 +75,7 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 				</div>
 					</h5>
 					<div 
-						:id="'graph_' + symbol.SymbolId" 
+						:id="'graph_' + symbol.symbolId" 
 						v-show="show(index)"
 						:class="isMobile ? 'graphGridItem_mobile_thumbnails' : 'graphGridItem_001'"
 					>
@@ -167,8 +167,8 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 		getPercentage(){
 			return (index) => { 
 				var c = index;
-				var init = this.items[index].Intraday[0].value;
-				var last = this.items[index].Intraday[this.items[index].Intraday.length - 1].value;
+				var init = this.items[index].intraday[0].value;
+				var last = this.items[index].intraday[this.items[index].intraday.length - 1].value;
 				if(!last || !init)
 				{
 					return 0;
@@ -179,13 +179,13 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 		},
     graphsData(){                         
       this.data.forEach( function(item, index){
-          // that.updateCharts(item.SymbolName, item.Intraday)
+          // that.updateCharts(item.symbolName, item.intraday)
       })
     },
     show(){
       return (index) => {
 		  if(this.filteredItems[index] && this.filteredItems[index].deleted){ return false; }        
-            return this.items[index] && this.items[index].Intraday && this.items[index].Intraday.length > 0;
+            return this.items[index] && this.items[index].intraday && this.items[index].intraday.length > 0;
       }
     },
 		getTicks(){
@@ -199,10 +199,10 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 			});
 		}
 		this.lastSearch = this.searchText;
-		return this.items.filter(item => {
+		return this.items && this.items.length > 0 ? this.items.filter(item => {
 			return !this.items || !this.searchTerm 
-				|| (item.SymbolName && item.SymbolName.toLowerCase().includes(this.searchText.toLowerCase()))
-		});
+				|| (item.symbolName && item.symbolName.toLowerCase().includes(this.searchText.toLowerCase()))
+		}): null;
     },
 		timestamp() {
 			return services.util.human(this.response.timestamps.apiResponse);
@@ -250,14 +250,14 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 	},
 	methods: {
 		api_collect(alert) {
-			if(alert.Intraday.length > 0)
+			if(alert.intraday.length > 0)
 			{
 				return;
 			}
 			alert.loading = true;
 			var meta = {};
 			var filter = {};
-			services.api.get(this, "stock/symbol/" + alert.SymbolId + "/pool/" + moment(this.selectedDate).format('YYYY-MM-DD'),	meta, filter, true).then(r => {
+			services.api.get(this, "stock/symbol/" + alert.symbolId + "/pool/" + moment(this.selectedDate).format('YYYY-MM-DD'),	meta, filter, true).then(r => {
 				// var date = this.virtualItems.find(p => r.data == p.date);
 				// date.loading = false;
 				// date.samples = r.data.samples;
@@ -268,7 +268,7 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 				return;
 			}
 			this.items.forEach(s => {
-				var news = this.items_news.filter(p=>p.symbolId === s.SymbolId);
+				var news = this.items_news.filter(p=>p.symbolId === s.symbolId);
 				if(news.length)
 				{
 					s.news = news.length > 0 ? news : null;
@@ -281,7 +281,7 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 			};
 				  services.api.get(this, 
 				  (this.meta.endpoints[collectionName].endpoint ? this.meta.endpoints[collectionName].endpoint : (this.type + "/list")), meta).then(r => {
-					  r.data.forEach(p=>{
+					  r.data.data.forEach(p=>{
 						  if(!p.id)
 						  {
 							  p.id = p['newsId'];
@@ -290,22 +290,22 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 						  }
 						  p.selected = false;
 					});
-					this.items_news = r.data;
+					this.items_news = r.data.data;
 				}).then(r=>{
 					this.attachNews();
 				});
 		},
     updateCharts(symbol, data){
-      if(!symbol.Intraday || symbol.Intraday.length === 0)
+      if(!symbol.intraday || symbol.intraday.length === 0)
       {
         return;
 	  }
-	  var element = document.getElementById("graph_" + symbol.SymbolId);
+	  var element = document.getElementById("graph_" + symbol.symbolId);
 	  if(!element || window.getComputedStyle(element).display !== 'block')
 	  {
         return;
 	  }
-        const chart = createChart("graph_" + symbol.SymbolId, { height: 100, width: (this.isMobile ? 100 : 200) });
+        const chart = createChart("graph_" + symbol.symbolId, { height: 100, width: (this.isMobile ? 100 : 200) });
         const lineSeries = chart.addLineSeries  ({          
           price: 39.0,
           color: 'red',
@@ -338,10 +338,10 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 		loadCompleted(items){        
       var that = this;              
       items.forEach( function(item, index){
-        // that.alerts.push(item.SymbolName);
+        // that.alerts.push(item.symbolName);
         that.$forceUpdate();
 		var current_datetime = new Date();
-          item.Intraday = item.Intraday.map((val, index) => {
+          item.intraday = item.intraday.map((val, index) => {
             // var current_datetime = new Date(val[0] * 1000);
             current_datetime.setDate(current_datetime.getDate() + 1 );
             let formatted_date = current_datetime.getFullYear() + "-" + ((current_datetime.getMonth() + 1) < 10 ? '0': '') + (current_datetime.getMonth() + 1) +  (current_datetime.getDate() < 10 ? "-0" : '-') + current_datetime.getDate();// + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
@@ -351,7 +351,7 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
               };
           }, this);
           that.$nextTick(() => {
-            that.updateCharts(item, item.Intraday);
+            that.updateCharts(item, item.intraday);
           });
       });
 		},
@@ -385,34 +385,41 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 			}
 		},
 		getItems(date) {
+			var collectionName = "01";
 			var meta = { 
 				collection: "items_" + collectionName, 
 				loading: "isLoading_" + collectionName 
 			};
 			services.api.get(this, 
-			(this.meta.endpoints.reload.endpoint ? this.meta.endpoints.reload.endpoint + (date ? '/' + date : '') : (this.type + "/list")), meta).then(r => {
-				r.data.forEach(p=>{
-					if(this.meta && this.meta.mapping){
-						this.meta.mapping.forEach(m=>{
-							p[m[0]] = "" + p[m[1]];
-						});
-					}
-					if(!p.id)
+			(this.meta.endpoints.reload.endpoint ? this.meta.endpoints.reload.endpoint 
+				+ (date ? '/' + date : '') 
+				+ "/skip/5/take/20"
+				: (this.type + "/list")), meta).then(r => {
+					r.data.data.forEach(p=>{
+						if(this.meta && this.meta.mapping){
+							this.meta.mapping.forEach(m=>{
+								p[m[0]] = "" + p[m[1]];
+							});
+						}
+						if(!p.id)
+						{
+							p.id = p[this.type+'Id'];
+						}
+						p.action = { 						
+							cycle_name: (p.active ? "Stop Polling": "Start Polling"), 
+							cycle_class: (p.active ? "glyphicon glyphicon-pause": "glyphicon glyphicon-play")
+						};
+						p.selected = false;
+						p.news = [];
+					});
+					if(r.data)
 					{
-						p.id = p[this.type+'Id'];
-						p.deleted = false;
+							this.items = r.data.data;
+							this.loadCompleted(this.items);
 					}
-					p.news = [];
-					p.selected = false;
-        });
-		if(r.data)
-		{
-				this.items = r.data;
-				this.loadCompleted(this.items);
-		}
-			}).then(p=>{
-			});;
-		},
+						}).then(p=>{
+						});
+					},
 		postItems(date) {
 			var meta = { 
 			};
@@ -420,7 +427,7 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 			return services.api.post(this, 
 			(this.meta.endpoints.reload.endpoint ? this.meta.endpoints.reload.endpoint + (date? '/' + date : '') : (this.type + "/list")),
 			meta, filter, true).then(r => {
-				r.data.forEach(p=>{
+				r.data.data.forEach(p=>{
 					if(this.meta && this.meta.mapping){
 						this.meta.mapping.forEach(m=>{
 							p[m[0]] = "" + p[m[1]];
@@ -449,8 +456,8 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 			alert.loading = true;
 			var meta = {};
 			var filter = {};
-			services.api.get(this, "symbol/" + alert.SymbolId + "/collect/" + moment(this.selectedDate).format('YYYY-MM-DD'),	meta, filter, true).then(r => {
-				var date = this.filteredItems.find(p => r.data.symbolId == p.SymbolId);
+			services.api.get(this, "symbol/" + alert.symbolId + "/collect/" + moment(this.selectedDate).format('YYYY-MM-DD'),	meta, filter, true).then(r => {
+				var date = this.filteredItems.find(p => r.data.symbolId == p.symbolId);
 				date.loading = false;
 				date.samples = 1;
 			});
@@ -498,7 +505,7 @@ const OtbTable = Vue.component("otb-expert-thumbnail", {
 		},
 		remove: function(item){
 			var existentItem = null; 
-			existentItem = this.items.find(p=>p.SymbolId == item.symbol.symbolId);
+			existentItem = this.items.find(p=>p.symbolId == item.symbol.symbolId);
 			if(existentItem){
 				existentItem.deleted = true;
 			}

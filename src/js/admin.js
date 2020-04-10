@@ -85,9 +85,10 @@ let app = new Vue({
         // currentPage: "page-requests",
         // currentPage: "page-news",
         // currentPage: "page-thumbnails",
+        currentPage: "page-alerts",
         // currentPage: "page-thumbnails",
         // currentPage: "page-graphs",
-        currentPage: "page-symbols",
+        // currentPage: "page-symbols",
         lookup:
         {
             symbols: {

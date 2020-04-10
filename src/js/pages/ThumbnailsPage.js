@@ -65,6 +65,14 @@ Vue.component("page-thumbnails", {
 						action: "execute goto graphs" // Execute = execute on parent; goto = function name; ticks = parameter
 					},
 					{
+						name: "Alerts",
+						isMobile: true,
+						linkClass: "red",
+						boxClass: "action-box",
+						class: "glyphicon glyphicon-list-alt",
+						action: "execute goto alerts" // Execute = execute on parent; goto = function name; ticks = parameter
+					},
+					{
 						name: "Reload",
 						class: "glyphicon glyphicon-refresh blue",
 						linkClass: "blue",
